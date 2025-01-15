@@ -20,10 +20,27 @@ def prisoners_dilemma(player_a, player_b):
 # Run the game
 
 score1, score2 = 0, 0
-
-for i in range(10):
+for i in range(40):
     outcome1, outcome2 = prisoners_dilemma(Players_To_Test.rand_option(), Players_To_Test.cooperate())
-    score1 = outcome1 
-    score2 = outcome2
-
+    score1 += outcome1 
+    score2 += outcome2
 print(f'Random Choice: {score1} Always Cooperate: {score2}')
+
+score1, score2 = 0, 0
+for i in range(40):
+    outcome1, outcome2 = prisoners_dilemma(Players_To_Test.rand_option(), Players_To_Test.defect())
+    score1 += outcome1 
+    score2 += outcome2
+print(f'Random Choice: {score1} Always Defect: {score2}')
+
+score1, score2 = 0, 0
+for i in range(40):
+    choice1  = Players_To_Test.rand_option()
+    choice2 = Players_To_Test.opposites(choice1)
+    outcome1, outcome2 = prisoners_dilemma(choice1, choice2)
+    score1 += outcome1 
+    score2 += outcome2
+print(f'Random Choice: {score1} Opposites: {score2}')
+
+
+
