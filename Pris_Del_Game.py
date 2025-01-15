@@ -18,7 +18,7 @@ def prisoners_dilemma(player_a, player_b):
     return outcome[0], outcome[1]
     
 # Run the game
-
+print("Sample size 40 rounds cumulative scores")
 score1, score2 = 0, 0
 for i in range(40):
     outcome1, outcome2 = prisoners_dilemma(Players_To_Test.rand_option(), Players_To_Test.cooperate())
@@ -41,6 +41,15 @@ for i in range(40):
     score1 += outcome1 
     score2 += outcome2
 print(f'Random Choice: {score1} Opposites: {score2}')
+
+score1, score2 = 0, 0
+for i in range(40):
+    choice1  = Players_To_Test.rand_option()
+    choice2 = Players_To_Test.mirror(choice1)
+    outcome1, outcome2 = prisoners_dilemma(choice1, choice2)
+    score1 += outcome1 
+    score2 += outcome2
+print(f'Random Choice: {score1} Mirrored: {score2}')
 
 
 
