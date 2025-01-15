@@ -11,3 +11,9 @@ def opposites(choice):
         return "defect"
     else:
         return "cooperate"
+    
+def cooperate():
+    return "cooperate"
+
+def defect():
+    return "defect"

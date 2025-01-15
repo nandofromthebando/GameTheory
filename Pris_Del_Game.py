@@ -1,9 +1,7 @@
 
-def prisoners_dilemma():
-    # Get choices from the players
-    player_a = input("Player A, enter your choice (cooperate/defect): ").strip().lower()
-    player_b = input("Player B, enter your choice (cooperate/defect): ").strip().lower()
-
+import Players_To_Test
+def prisoners_dilemma(player_a, player_b):
+    
     # Determine the outcomes
     if player_a == "cooperate" and player_b == "cooperate":
         outcome = (-1, -1)
@@ -17,11 +15,15 @@ def prisoners_dilemma():
         print("Invalid input. Choices must be 'cooperate' or 'defect'.")
         return
     
-    # Display the result
-    print(f"\nResults:")
-    print(f"  Player A chose: {player_a}")
-    print(f"  Player B chose: {player_b}")
-    print(f"  Payoff: Player A: {outcome[0]} points, Player B: {outcome[1]} points")
+    return outcome[0], outcome[1]
     
 # Run the game
-prisoners_dilemma()
+
+score1, score2 = 0, 0
+
+for i in range(10):
+    outcome1, outcome2 = prisoners_dilemma(Players_To_Test.rand_option(), Players_To_Test.cooperate())
+    score1 = outcome1 
+    score2 = outcome2
+
+print(f'Random Choice: {score1} Always Cooperate: {score2}')
