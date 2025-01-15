@@ -19,6 +19,7 @@ def prisoners_dilemma(player_a, player_b):
     
 # Run the game
 print("Prisoner's Dilemma Simulation: Sample size of 40 rounds per scenario")
+
 score1, score2 = 0, 0
 for i in range(40):
     outcome1, outcome2 = prisoners_dilemma(Players_To_Test.rand_option(), Players_To_Test.cooperate())
@@ -51,5 +52,29 @@ for i in range(40):
     score2 += outcome2
 print(f'Random Choice: {score1} Mirrored: {score2}')
 
+score1, score2 = 0, 0
+
+for i in range(40):
+    if i <= 19:
+        outcome1, outcome2 = prisoners_dilemma(Players_To_Test.rand_option(), Players_To_Test.cooperate())
+        score1 += outcome1 
+        score2 += outcome2
+    else: 
+        outcome1, outcome2 = prisoners_dilemma(Players_To_Test.rand_option(), Players_To_Test.rand_option())
+        score1 += outcome1 
+        score2 += outcome2
+
+print(f'Random Choice: {score1} Cooperate First Half (Then Random): {score2}')
 
 
+for i in range(40):
+    if i <= 19:
+        outcome1, outcome2 = prisoners_dilemma(Players_To_Test.rand_option(), Players_To_Test.cooperate())
+        score1 += outcome1 
+        score2 += outcome2
+    else: 
+        outcome1, outcome2 = prisoners_dilemma(Players_To_Test.rand_option(), Players_To_Test.defect())
+        score1 += outcome1 
+        score2 += outcome2
+
+print(f'Random Choice: {score1} Cooperate First Half (Then Defect): {score2}')
