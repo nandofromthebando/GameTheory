@@ -18,7 +18,7 @@ def prisoners_dilemma(player_a, player_b):
     return outcome[0], outcome[1]
     
 # Run the game
-print("Sample size 40 rounds cumulative scores")
+print("Prisoner's Dilemma Simulation: Sample size of 40 rounds per scenario")
 score1, score2 = 0, 0
 for i in range(40):
     outcome1, outcome2 = prisoners_dilemma(Players_To_Test.rand_option(), Players_To_Test.cooperate())
