@@ -1,4 +1,5 @@
-import Players_To_Test  # Ensure only one import.
+import matplotlib.pyplot as plt
+import Players_To_Test
 
 def prisoners_dilemma(player_a, player_b):
     # Determine the outcomes
@@ -15,17 +16,13 @@ def prisoners_dilemma(player_a, player_b):
         return None  # Return None explicitly in case of invalid input.
     
     return outcome[0], outcome[1]
-    
-# Run the game
-print("Prisoner's Dilemma Simulation: Sample size of 40 rounds per scenario")
-print("Player 1 (Random Choice) is compared against all strategies of Player 2.")
 
 # List of strategies
 strategies = [
     ("Always Cooperate", lambda choice: Players_To_Test.cooperate()),
     ("Always Defect", lambda choice: Players_To_Test.defect()),
-    ("Opposites", Players_To_Test.opposites),  # Requires Player 1's choice.
-    ("Mirrored", Players_To_Test.mirror),     # Requires Player 1's choice.
+    ("Opposites", Players_To_Test.opposites),
+    ("Mirrored", Players_To_Test.mirror),
     ("Cooperate First Half (Then Random)", lambda i: Players_To_Test.cooperate() if i <= 19 else Players_To_Test.rand_option()),
     ("Cooperate First Half (Then Defect)", lambda i: Players_To_Test.cooperate() if i <= 19 else Players_To_Test.defect()),
     ("Defect First Half (Then Cooperate)", lambda i: Players_To_Test.defect() if i <= 19 else Players_To_Test.cooperate()),
@@ -41,13 +38,34 @@ strategies = [
     ("Cooperate First Game (Then Mirror)", lambda i, choice: Players_To_Test.cooperate() if i == 0 else Players_To_Test.mirror(choice)),
 ]
 
-# Simulate all scenarios
-# Simulate all scenarios
+def plot_results(results):
+    """
+    Plots the results of the simulation.
+
+    :param results: List of tuples containing strategy names and scores.
+    """
+    strategies, scores1, scores2 = zip(*results)
+
+    x = range(len(strategies))
+    plt.figure(figsize=(12, 6))
+    plt.bar(x, scores1, width=0.4, label="Player 1 (Random)", align="center", color="blue")
+    plt.bar([p + 0.4 for p in x], scores2, width=0.4, label="Player 2", align="center", color="orange")
+
+    plt.xlabel("Strategies")
+    plt.ylabel("Scores")
+    plt.title("Prisoner's Dilemma Simulation Results")
+    plt.xticks([p + 0.2 for p in x], strategies, rotation=45, ha="right")
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+# Run the simulation and collect results
+results = []
 for name, strategy in strategies:
     score1, score2 = 0, 0
     for i in range(40):
-        player1_choice = Players_To_Test.rand_option()  # Generate Player 1's choice.
-        
+        player1_choice = Players_To_Test.rand_option()
+
         # Handle strategies requiring both `i` and `choice`
         if callable(strategy) and name in [
             "Cooperate First Half (Then Mirror)",
@@ -61,23 +79,22 @@ for name, strategy in strategies:
         ]:
             choice2 = strategy(i, player1_choice)
         elif callable(strategy):
-            # Handle strategies requiring only the round index or no arguments
             choice2 = strategy(i) if name in [
                 "Cooperate First Half (Then Random)",
                 "Cooperate First Half (Then Defect)",
                 "Defect First Half (Then Random)",
-                "Defect First Half (Then Cooperate)"
+                "Defect First Half (Then Cooperate)",
             ] else strategy(None)
         else:
-            choice2 = strategy  # For fixed strategies like always cooperate/defect.
+            choice2 = strategy
 
-        # Compute outcomes and update scores
         outcome = prisoners_dilemma(player1_choice, choice2)
-        if outcome is not None:  # Ensure valid outcomes before updating scores
+        if outcome is not None:
             outcome1, outcome2 = outcome
             score1 += outcome1
             score2 += outcome2
     
-    # Print the results for the current strategy
-    print(f'Random Choice: {score1} {name}: {score2}')
+    results.append((name, score1, score2))
 
+# Plot the results
+plot_results(results)
