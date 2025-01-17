@@ -30,26 +30,54 @@ strategies = [
     ("Cooperate First Half (Then Defect)", lambda i: Players_To_Test.cooperate() if i <= 19 else Players_To_Test.defect()),
     ("Defect First Half (Then Cooperate)", lambda i: Players_To_Test.defect() if i <= 19 else Players_To_Test.cooperate()),
     ("Random Choice", lambda choice: Players_To_Test.rand_option()),
+    ("Cooperate First Half (Then Mirror)", lambda i, choice: Players_To_Test.cooperate() if i <= 19 else Players_To_Test.mirror(choice)),
+    ("Cooperate First Half (Then Opposites)", lambda i, choice: Players_To_Test.cooperate() if i <= 19 else Players_To_Test.opposites(choice)),
+    ("Defect First Half (Then Random)", lambda i: Players_To_Test.defect() if i <= 19 else Players_To_Test.rand_option()),
+    ("Defect First Half (Then Mirror)", lambda i, choice: Players_To_Test.defect() if i <= 19 else Players_To_Test.mirror(choice)),
+    ("Defect First Half (Then Opposites)", lambda i, choice: Players_To_Test.defect() if i <= 19 else Players_To_Test.opposites(choice)),
+    ("Opposites Every Other", lambda i, choice: Players_To_Test.opposites(choice) if i % 2 == 0 else choice),
+    ("Mirror Every Other", lambda i, choice: Players_To_Test.mirror(choice) if i % 2 == 0 else choice),
+    ("Opposites First Half (Then Mirror)", lambda i, choice: Players_To_Test.opposites(choice) if i <= 19 else Players_To_Test.mirror(choice)),
+    ("Cooperate First Game (Then Mirror)", lambda i, choice: Players_To_Test.cooperate() if i == 0 else Players_To_Test.mirror(choice)),
 ]
 
+# Simulate all scenarios
 # Simulate all scenarios
 for name, strategy in strategies:
     score1, score2 = 0, 0
     for i in range(40):
         player1_choice = Players_To_Test.rand_option()  # Generate Player 1's choice.
         
-        if callable(strategy) and name in ["Opposites", "Mirrored"]:
-            # Pass Player 1's choice to strategies that depend on it.
-            choice2 = strategy(player1_choice)
+        # Handle strategies requiring both `i` and `choice`
+        if callable(strategy) and name in [
+            "Cooperate First Half (Then Mirror)",
+            "Cooperate First Half (Then Opposites)",
+            "Defect First Half (Then Mirror)",
+            "Defect First Half (Then Opposites)",
+            "Opposites Every Other",
+            "Mirror Every Other",
+            "Opposites First Half (Then Mirror)",
+            "Cooperate First Game (Then Mirror)",
+        ]:
+            choice2 = strategy(i, player1_choice)
         elif callable(strategy):
-            # Pass the index for time-dependent strategies.
-            choice2 = strategy(i) if name in ["Cooperate First Half (Then Random)", "Cooperate First Half (Then Defect)", "Defect First Half (Then Cooperate)"] else strategy(None)
+            # Handle strategies requiring only the round index or no arguments
+            choice2 = strategy(i) if name in [
+                "Cooperate First Half (Then Random)",
+                "Cooperate First Half (Then Defect)",
+                "Defect First Half (Then Random)",
+                "Defect First Half (Then Cooperate)"
+            ] else strategy(None)
         else:
             choice2 = strategy  # For fixed strategies like always cooperate/defect.
 
+        # Compute outcomes and update scores
         outcome = prisoners_dilemma(player1_choice, choice2)
-        if outcome is not None:  # Ensure valid outcomes before updating scores.
+        if outcome is not None:  # Ensure valid outcomes before updating scores
             outcome1, outcome2 = outcome
             score1 += outcome1
             score2 += outcome2
+    
+    # Print the results for the current strategy
     print(f'Random Choice: {score1} {name}: {score2}')
+
